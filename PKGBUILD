@@ -5,7 +5,7 @@
 # Maintainer: mickael9 <mickael9 at gmail.com>
 # Contributor: Pierre Schmitz <pierre@archlinux.de>
 # Contributor: Thore Bödecker <me@foxxx0.de>
-# 
+#
 pkgbase=php70
 _pkgbase=${pkgbase%70}
 pkgname=("${pkgbase}"
@@ -35,9 +35,9 @@ license=('PHP')
 
 
 url='http://www.php.net'
-makedepends=('apache' 'aspell' 'db' 'enchant' 'gd' 'gmp' 'icu' 
-			'libmcrypt' 'libxslt' 'libzip' 'net-snmp' 
-			'postgresql-libs' 'sqlite' 'systemd' 'tidy' 'unixodbc' 'curl' 
+makedepends=('apache' 'aspell' 'db' 'enchant' 'gd' 'gmp' 'icu'
+			'libmcrypt' 'libxslt' 'libzip' 'net-snmp'
+			'postgresql-libs' 'sqlite' 'systemd' 'tidy' 'unixodbc' 'curl'
 			'libtool' 'freetds' 'pcre' 'c-client')
 
 source=("https://php.net/distributions/${_pkgbase}-${pkgver}.tar.xz"{,.asc}
@@ -253,7 +253,7 @@ package_php70-fpm() {
 	cd ${srcdir}/build
 	make -j1 INSTALL_ROOT=${pkgdir} install-fpm
 	install -D -m644 sapi/fpm/php-fpm.service ${pkgdir}/usr/lib/systemd/system/${pkgbase}-fpm.service
-	install -D -m644 ${srcdir}/../php-fpm.tmpfiles ${pkgdir}/usr/lib/tmpfiles.d/${pkgbase}-fpm.conf
+	install -D -m644 ${srcdir}/php-fpm.tmpfiles ${pkgdir}/usr/lib/tmpfiles.d/${pkgbase}-fpm.conf
 }
 
 package_php70-embed() {

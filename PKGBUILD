@@ -27,8 +27,8 @@ pkgname=("${pkgbase}"
          "${pkgbase}-sqlite"
          "${pkgbase}-tidy"
          "${pkgbase}-xsl")
-pkgver=7.0.20
-pkgrel=1
+pkgver=7.0.21
+pkgrel=3
 pkgdesc="PHP scripting language package for stable release of 7.0 series"
 arch=('i686' 'x86_64')
 license=('PHP')
@@ -43,7 +43,7 @@ makedepends=('apache' 'aspell' 'db' 'enchant' 'gd' 'gmp' 'icu'
 source=("https://php.net/distributions/${_pkgbase}-${pkgver}.tar.xz"{,.asc}
         'apache.patch' 'apache.conf' 'php-fpm.patch' 'php-fpm.tmpfiles' 'php.ini.patch'
         )
-sha256sums=('31b9cf1fb83fe3cd82c2f6603a0ae81ae6abacb5286827e362d8f85e68908e0a'
+sha256sums=('6713fe3024365d661593235b525235045ef81f18d0043654658c9de1bcb8b9e3'
             'SKIP'
             '819f05d2fd5a75c96e93c863517ca77dbd021a1224dc2d8096f758fb2937df6a'
             'df075b89484eb3a08402788580de16d23123f95541b2e9aed8d928105de9b874'
@@ -52,6 +52,19 @@ sha256sums=('31b9cf1fb83fe3cd82c2f6603a0ae81ae6abacb5286827e362d8f85e68908e0a'
             '2f678d039313ee613d59c8b4bf9f48068085df0fa8ac7ca4cf807e168061a8c9'
             )
 # keys from http://php.net/downloads.php#gpg-7.0
+#
+#pub   2048R/9C0D5763 2015-06-09 [expires: 2024-06-06]
+#key fingerprint = 1A4E 8B72 77C4 2E53 DBA9  C7B9 BCAA 30EA 9C0D 5763
+#uid                  Anatol Belski <ab@php.net>
+
+#pub   2048R/33CFC8B3 2014-01-14 [expires: 2020-01-13]
+#Key fingerprint = 6E4F 6AB3 21FD C07F 2C33  2E3A C2BF 0BC4 33CF C8B3
+#uid                  Ferenc Kovacs <tyrael@php.net>
+#
+# This command line works on my setup. 
+# gpg --recv-keys 1A4E8B7277C42E53DBA9C7B9BCAA30EA9C0D5763
+#
+
 validpgpkeys=(
 	'1A4E8B7277C42E53DBA9C7B9BCAA30EA9C0D5763'
 	'6E4F6AB321FDC07F2C332E3AC2BF0BC433CFC8B3'
@@ -180,15 +193,17 @@ build() {
 	cd ../../
 
 }
-
-
+#
+# Its a good idea to have extensions specified by extension.ini files in the conf.d directory,
+# so they are unaffected by upgrades.
+#
 package_php70() {
 	pkgdesc='A general-purpose scripting language that is especially suited to web development'
 	depends=('libxml2' 'curl' 'libzip' 'pcre')
 	replaces=('php70-ldap')
 	conflicts=('php70-ldap')
 	provides=("${_pkgbase}=$pkgver")
-	backup=('etc/${pkgbase}/php.ini')
+	backup=("etc/${pkgbase}/php.ini")
 
 	cd ${srcdir}/build
 	make -j1 INSTALL_ROOT=${pkgdir} install-{modules,cli,build,headers,programs,pharcmd}

@@ -41,16 +41,16 @@ makedepends=('apache' 'aspell' 'db' 'enchant' 'gd' 'gmp' 'icu'
 			'libtool' 'freetds' 'pcre' 'c-client')
 
 source=("https://php.net/distributions/${_pkgbase}-${pkgver}.tar.xz"{,.asc}
-        'apache.patch' 'apache.conf' 'php-fpm.patch' 'php-fpm.tmpfiles' 'php.ini.patch'
+        'apache.patch' 'apache.conf' 'enchant-2.patch' 'php-fpm.patch' 'php-fpm.tmpfiles' 'php.ini.patch'
         )
 sha256sums=('4b2bc823e806dbf7b62fe0b92b0d14b0c6e03f88c3fc5d96278416c54ce11f6c'
             'SKIP'
             '819f05d2fd5a75c96e93c863517ca77dbd021a1224dc2d8096f758fb2937df6a'
             'df075b89484eb3a08402788580de16d23123f95541b2e9aed8d928105de9b874'
+            'b7a8734d154df153e45a38571acd6159d88caf40b1ef3bfeb5b9a3b49df84c27'
             '75322f9b38c5961faddcb4f5333fbcb5ea5955e4f54f1eec223fc4367eb3b247'
             'b6b7f3ced56b75bf95513a46f43cde41fc28da714f5e0ed181caf2266f2f0c27'
-            '2f678d039313ee613d59c8b4bf9f48068085df0fa8ac7ca4cf807e168061a8c9'
-            )
+            '2f678d039313ee613d59c8b4bf9f48068085df0fa8ac7ca4cf807e168061a8c9')
 # keys from http://php.net/downloads.php#gpg-7.0
 #
 #pub   2048R/9C0D5763 2015-06-09 [expires: 2024-06-06]
@@ -61,7 +61,7 @@ sha256sums=('4b2bc823e806dbf7b62fe0b92b0d14b0c6e03f88c3fc5d96278416c54ce11f6c'
 #Key fingerprint = 6E4F 6AB3 21FD C07F 2C33  2E3A C2BF 0BC4 33CF C8B3
 #uid                  Ferenc Kovacs <tyrael@php.net>
 #
-# This command line works on my setup. 
+# This command line works on my setup.
 # gpg --recv-keys 1A4E8B7277C42E53DBA9C7B9BCAA30EA9C0D5763
 #
 
@@ -76,6 +76,7 @@ prepare() {
 	patch -p0 -i ${srcdir}/apache.patch
 	patch -p0 -i ${srcdir}/php-fpm.patch
 	patch -p0 -i ${srcdir}/php.ini.patch
+	patch -p0 -i ${srcdir}/enchant-2.patch
 }
 
 

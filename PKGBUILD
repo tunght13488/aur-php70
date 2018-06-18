@@ -12,26 +12,26 @@ pkgbase=php70
 _pkgbase=${pkgbase%70}
 pkgname=(
     "${pkgbase}"
-     "${pkgbase}-cgi"
-     "${pkgbase}-apache"
-     "${pkgbase}-fpm"
-     "${pkgbase}-embed"
-     "${pkgbase}-phpdbg"
-     "${pkgbase}-dblib"
-     "${pkgbase}-enchant"
-     "${pkgbase}-gd"
-     "${pkgbase}-imap"
-     "${pkgbase}-intl"
-     "${pkgbase}-mcrypt"
-     "${pkgbase}-odbc"
-     "${pkgbase}-pgsql"
-     "${pkgbase}-pspell"
-     "${pkgbase}-snmp"
-     "${pkgbase}-sqlite"
-     "${pkgbase}-tidy"
-     "${pkgbase}-xsl"
+    "${pkgbase}-cgi"
+    "${pkgbase}-apache"
+    "${pkgbase}-fpm"
+    "${pkgbase}-embed"
+    "${pkgbase}-phpdbg"
+    "${pkgbase}-dblib"
+    "${pkgbase}-enchant"
+    "${pkgbase}-gd"
+    "${pkgbase}-imap"
+    "${pkgbase}-intl"
+    "${pkgbase}-mcrypt"
+    "${pkgbase}-odbc"
+    "${pkgbase}-pgsql"
+    "${pkgbase}-pspell"
+    "${pkgbase}-snmp"
+    "${pkgbase}-sqlite"
+    "${pkgbase}-tidy"
+    "${pkgbase}-xsl"
 )
-pkgver=7.0.29
+pkgver=7.0.30
 pkgrel=2
 pkgdesc='A general-purpose scripting language that is especially suited to web development (old stable 7.0 series)'
 arch=('i686' 'x86_64')
@@ -56,8 +56,8 @@ source=(
     'php-icu-1101-Simplify-namespace-access.patch'
 )
 sha512sums=(
-    'ea5a2fbcfc875dd2621e3f67038c1e00f43b53bc7079ae2127fcefbf116db0f32e34d4435f8211305402a4eccdaa5dfd6b96cf9416e68700f2c1f438d74a0af8'
-    '3702882c137cefaf62f55c9a2c508173152b6e7ad33be2f7de38e6e4e5273109efb19fa9fe6964a385d95f7837df80769d890fe0e04a78c8ede66cc266ba9b92'
+    '1f0914ebda79247aa65ace63f6c8c4fcd850b21a82704f7b6482760259239cc5fee4cfd5aa2ed590b56822b4d69330ac472f46537e7f25d59e73ba63a48827c5'
+    '7a3fc590924cf8ab3acc79a313e533cf8fed24439c90ec3621523fc432248d309474960ee9b5a449d70150b05da2beefa6fe58f919de238e4762ccb614acf126'
     'f5e5431993c2e0c1806c4edf392030d0b605f4b3c4cebec036e810ff771b2327983f347221735673506e2c91ce2e18ad37ab7600261b684fe29491206171b4f3'
     '30cdc281c6e288cf8a0bf58a0ad74ad5b4e8205d2b0b6ab465fad97d810f7bfae4581ad836712998e834d2e90d38cacd22f19bb01e77fc4c9d200d95613fc669'
     '2d5f3aa71ce7d8da43f0f683f81b06258e3a0d95df4807a8acac91ff89fbe60484ef97856a908bce625b1610d0004767a6a8c622246086afe2f2d464977088b5'
@@ -97,6 +97,17 @@ prepare() {
     patch -p0 -i ${srcdir}/enchant-2.patch
     patch -p1 -i ${srcdir}/php-icu-1100-Utilize-the-recommended-way-to-handle-the-icu-namespace.patch
     patch -p1 -i ${srcdir}/php-icu-1101-Simplify-namespace-access.patch
+
+
+    # Build against specific libs in order to avoid clashes with official Arch Linux php package.
+    #sed -i configure -e "s/SAPI_SHARED=libs\/libphp7.so/SAPI_SHARED=libs\/lib${pkgbase}.so/g"
+    #sed -i configure -e 's/SAPI_SHARED=libs\/libphp$PHP_MAJOR_VERSION.$SHLIB_DL_SUFFIX_NAME/SAPI_SHARED=libs\/libphp$PHP_MAJOR_VERSION$PHP_MINOR_VERSION.$SHLIB_DL_SUFFIX_NAME/g'
+    #sed -i configure -e 's/OVERALL_TARGET=libphp$PHP_MAJOR_VERSION.la/OVERALL_TARGET=libphp$PHP_MAJOR_VERSION$PHP_MINOR_VERSION.la/g'
+    #sed -i configure -e 's/OVERALL_TARGET=libs\/libphp$PHP_MAJOR_VERSION.bundle/OVERALL_TARGET=libs\/libphp$PHP_MAJOR_VERSION$PHP_MINOR_VERSION.bundle/g'
+    #sed -i acinclude.m4 -e 's/OVERALL_TARGET=libphp\[\]$PHP_MAJOR_VERSION\[.la\]/OVERALL_TARGET=libphp\[\]$PHP_MAJOR_VERSION$PHP_MINOR_VERSION\[.la\]/g'
+    #sed -i aclocal.m4 -e 's/OVERALL_TARGET=libphp\[\]$PHP_MAJOR_VERSION\[.la\]/OVERALL_TARGET=libphp\[\]$PHP_MAJOR_VERSION$PHP_MINOR_VERSION\[.la\]/g'
+    #sed -i aclocal.m4 -e 's/OVERALL_TARGET=libs\/libphp\[\]$PHP_MAJOR_VERSION\[.bundle\]/OVERALL_TARGET=libs\/libphp\[\]$PHP_MAJOR_VERSION$PHP_MINOR_VERSION\[.bundle\]/g'
+
 }
 
 
@@ -138,7 +149,6 @@ build() {
         --with-curl=shared \
         --with-db4=/usr \
         --with-enchant=shared,/usr \
-        --with-freetype-dir=/usr \
         --with-gd=shared,/usr \
         --with-gdbm \
         --with-gettext=shared \
@@ -297,6 +307,7 @@ package_php70-embed() {
 
     cd ${srcdir}/build
     make -j1 INSTALL_ROOT=${pkgdir} PHP_SAPI=embed install-sapi
+    mv ${pkgdir}/usr/lib/libphp7.so ${pkgdir}/usr/lib/libphp-70.so
 }
 
 package_php70-phpdbg() {
